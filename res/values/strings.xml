@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TimeTracker</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Sleep Tracking</string>
+    <string name="title_section2">Affirmations</string>
+    <string name="title_section3">Section 3</string>
+    <string name="first">First</string>
+    <string name="last">Last</string>
+    <string name="generic_radio">Generic Radio</string>
+    <string name="going_to_sleep">In Bed</string>
+    <string name="waking_up">Up</string>
+    <string name="large_text">Large Text</string>
+    <string name="sleep_state">Current State</string>
+    <string name="debugging_text_view">Debugging Text View</string>
+
+</resources>
