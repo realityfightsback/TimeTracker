@@ -17,7 +17,7 @@ public class TimeContract {
 				+ " INTEGER PRIMARY KEY,"
 				+ TimeEntry.COLUMN_NAME_TIME_GOING_DOWN + TEXT_TYPE + COMMA_SEP
 				+ TimeEntry.COLUMN_NAME_TYPE + TEXT_TYPE + COMMA_SEP
-				+ TimeEntry.COLUMN_NAME_TIME_GOING_DOWN + TEXT_TYPE + "  )";
+				+ TimeEntry.COLUMN_NAME_GETTING_UP + TEXT_TYPE + "  )";
 		public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
 				+ TimeEntry.TABLE_NAME;
 

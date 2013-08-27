@@ -1,5 +1,13 @@
 package com.reality.timetracker;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -9,6 +17,7 @@ import com.reality.timetracker.dao.TimeContract.TimeEntry;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,18 +60,11 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		tDao = new TimeDAO(this);
+		writeToDebugPanel("HEY THERE");
 
-		SQLiteDatabase db = tDao.getReadableDatabase();
-		ContentValues values = new ContentValues();
-		values.put(TimeEntry.COLUMN_NAME_TIME_GOING_DOWN, "11:30pm");
+		messingWithSQLLite();
 
-		values.put(TimeEntry.COLUMN_NAME_GETTING_UP, "8:00am");
-		values.put(TimeEntry.COLUMN_NAME_TYPE, "Nap");
-		
-		db.insert(TimeEntry.TABLE_NAME, null, values);
-		
-//		db.query(TimeEntry.TABLE_NAME, columns, selection, selectionArgs, groupBy, having, orderBy)
+		// fileWriting();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -73,6 +75,83 @@ public class MainActivity extends FragmentActivity {
 		// mViewPager = (ViewPager) findViewById(R.id.pager);
 		// mViewPager.setAdapter(mSectionsPagerAdapter);
 
+	}
+
+	private void fileWriting() {
+		try {
+
+			File file = new File(getFilesDir(), "time.dat");
+
+			file.createNewFile();
+
+			// BufferedWriter bWriter = new BufferedWriter(new
+			// FileWriter(file));
+			//
+			// bWriter.append("12:01am  Nap  3:00pm");
+			// bWriter.newLine();
+			// bWriter.append("11:54am  Sleep  3:00pm");
+			// Log.d("", "appended");
+			// bWriter.flush();
+			// bWriter.close();
+
+			BufferedReader bReader = new BufferedReader(new FileReader(
+					new File(getFilesDir(), "time.dat")));
+
+			String tempStr = null;
+			while ((tempStr = bReader.readLine()) != null) {
+				Log.d("", "read a value" + tempStr);
+				writeToDebugPanel(tempStr);
+				Thread.sleep(3000);
+			}
+
+			bReader.close();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Log.e("FileOps", "Failed", e);
+		}
+	}
+
+	public void writeToDebugPanel(String t) {
+		TextView tView = (TextView) findViewById(R.id.debugging_text_view);
+
+		tView.setText(t);
+	}
+
+	private void messingWithSQLLite() {
+		tDao = new TimeDAO(this);
+
+		SQLiteDatabase db = tDao.getReadableDatabase();
+
+		ContentValues values = createSqlLiteRow("11:30pm", "Nap", "8:00am");
+
+		db.insert(TimeEntry.TABLE_NAME, null, values);
+
+		sqlLiteSelectAll(db);
+	}
+
+	private ContentValues createSqlLiteRow(String down, String type, String up) {
+		ContentValues values = new ContentValues();
+		
+		values.put(TimeEntry.COLUMN_NAME_TIME_GOING_DOWN, down);
+		values.put(TimeEntry.COLUMN_NAME_GETTING_UP, up);
+		values.put(TimeEntry.COLUMN_NAME_TYPE, type);
+		
+		return values;
+	}
+
+	public void sqlLiteSelectAll(SQLiteDatabase db) {
+
+		Cursor cursor = db.query(TimeEntry.TABLE_NAME, null, null, null, null,
+				null, null);
+
+		if (cursor.moveToFirst()) {
+			String colTimeUp = cursor.getString(0);
+			String colTimeDown = cursor.getString(1);
+			String type = cursor.getString(2);
+
+			writeToDebugPanel(colTimeDown + colTimeUp + type);
+		}
 	}
 
 	@Override
@@ -190,6 +269,7 @@ public class MainActivity extends FragmentActivity {
 			}
 			}
 		}
+
 	}
 
 }

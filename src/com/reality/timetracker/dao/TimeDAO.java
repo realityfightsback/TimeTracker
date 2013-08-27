@@ -10,20 +10,21 @@ public class TimeDAO extends SQLiteOpenHelper {
 
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "Time.db";
-	
-//	"YYYY-MM-DD HH:MM:SS.SSS"
+
+	// "YYYY-MM-DD HH:MM:SS.SSS"
 	public TimeDAO(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-db.execSQL(TimeEntry.SQL_CREATE_ENTRIES);
+		db.execSQL(TimeEntry.SQL_CREATE_ENTRIES);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+		db.execSQL(TimeEntry.SQL_DELETE_ENTRIES);
+		db.execSQL(TimeEntry.SQL_CREATE_ENTRIES);
 
 	}
 
